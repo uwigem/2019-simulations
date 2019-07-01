@@ -1,0 +1,73 @@
+\documentclass[11pt,oneside]{article}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{pst-plot, pstricks,pstricks-add}
+\usepackage{fancyhdr}
+\usepackage{framed}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,shapes,fit,calc}
+\usepackage{xcolor}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usepackage{theorem}
+%\usepackage{amsthm}
+\usepackage[latin1]{inputenc}
+\usepackage{color}
+\usepackage{epsfig}
+
+	\addtolength{\voffset}{-1in}
+	\addtolength{\oddsidemargin}{-0.9in}
+	\addtolength{\evensidemargin}{-.9in}
+	\addtolength{\textwidth}{1.5in}
+	\addtolength{\marginparwidth}{-1in}
+	\addtolength{\topmargin}{-0.3in}
+	\addtolength{\footskip}{1in}
+	\addtolength{\textheight}{4in}
+\parindent 0pt
+\addtolength{\headheight}{30pt}
+\pagestyle{fancy}
+
+
+\parindent 0pt
+\raggedbottom
+\theoremstyle{changebreak}
+%\newtheoremstyle{thii}{}{}{\itshape}{\bfseries}{.}{\newline}{}
+\theoremheaderfont{\bfseries\boldmath}
+%\theoremstyle{thii}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{la}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{pro}[thm]{Proposition}
+\newtheorem{prob}{Problem} 
+\theorembodyfont{\upshape}
+\newcommand{\proof}{\noindent \textbf{Proof: }}
+\newcommand{\qed}{\hspace*{\fill} $\blacksquare$ }
+
+
+\begin{document}
+ \textbf{ODEs for CID System:} \\
+ 
+ $\frac{dN_{A}}{dt} = k_{-1}C_{1} -k_{1}MN_{A}$\\
+ 
+ $\frac{dM}{dt} = \frac{dN_{A}}{dt}$ \\
+ 
+ $\frac{dN_{D}}{dt} = k_{-2}C_{2} - k_{2}C_{1}N_{D}$\\
+ 
+ $\frac{dC_{1}}{dt} =  \frac{dN_{D}}{dt}-\frac{dN_{A}}{dt}$\\
+ 
+ $\frac{dC_{2}}{dt} =  \frac{dG_{off}}{dt} -\frac{dN_{D}}{dt}$\\
+ 
+$\frac{dG_{off}}{dt} = k_{-3}G_{on} - k_{3}C_{2}G_{off}$ \\ 
+ 
+ $\frac{dG_{on}}{dt} = -\frac{dG_{off}}{dt}$\\
+ 
+ $\frac{dr}{dt} = \alpha_{r}G_{on} - d_{r}r$\\
+ 
+ $\frac{dP}{dt} = \alpha_{p}r - d_{P}P$ \\
+ 
+ 
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\end{document}

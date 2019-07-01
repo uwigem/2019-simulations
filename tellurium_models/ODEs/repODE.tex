@@ -1,0 +1,48 @@
+\documentclass[10pt,oneside]{article}
+\usepackage{amsmath,amsfonts,amssymb}
+
+\addtolength{\voffset}{-1in}
+	\addtolength{\oddsidemargin}{-0.9in}
+	\addtolength{\evensidemargin}{-0.9in}
+	\addtolength{\textwidth}{1.5in}
+	\addtolength{\marginparwidth}{-1in}
+	\addtolength{\topmargin}{-0.3in}
+	\addtolength{\footskip}{1in}
+	\addtolength{\textheight}{4in}
+
+\begin{document}
+\textbf{Repressilator ODEs} \\
+
+ $\frac{d[G_{\lambda}]}{dt} = k_{-1}[g_{\lambda}] - k_{1}[T][G_{\lambda}]$\\
+ 
+ $\frac{d[g_{\lambda}]}{dt} = -\frac{d[G_{\lambda}]}{dt}$\\
+ 
+ $\frac{d[r_{\lambda}]}{dt} = k_{2}[G_{\lambda}] - k_{3}[r_{\lambda}]$\\
+ 
+ $\frac{d[\lambda]}{dt} = k_{4}[r_{\lambda}] - k_{5}[\lambda] + k_{-6}[g_{L}] - k_{6}[\lambda][G_{L}] = k_{4}[r_{\lambda}] - k_{5}[\lambda] + \frac{d[G_{L}]}{dt}$\\
+ 
+ $\frac{d[G_{L}]}{dt} = k_{-6}[g_{L}] - k_{6}[\lambda][G_{L}]$\\
+ 
+ $\frac{d[g_{L}]}{dt} = -\frac{d[G_{L}]}{dt}$\\
+ 
+ $\frac{d[r_{L}]}{dt} = k_{7}[G_{L}] - k_{8}[r_{L}]$\\
+ 
+ $\frac{d[\lambda]}{dt} = k_{9}[r_{L}] - k_{10}[T] + k_{-11}[g_{T}] - k_{11}[L][G_{T}] = k_{9}[r_{L}] - k_{10}[T] + \frac{d[G_{T}]}{dt} $\\
+ 
+ $\frac{d[G_{T}]}{dt} = k_{-11}[g_{T}] - k_{11}[L][G_{T}]$\\
+ 
+ $\frac{d[g_{T}]}{dt} = -\frac{d[G_{T}]}{dt}$\\
+ 
+ $\frac{d[r_{T}]}{dt} = k_{12}[G_{T}] - k_{13}[r_{T}]$\\
+ 
+ $\frac{d[T]}{dt} = k_{14}[r_{T}] - k_{15}[T] + k_{-1}[g_{\lambda}] - k_{1}[T][G_{\lambda}] + k_{-16}[g_{F}] - k_{16}[T][G_{F}]= k_{14}[r_{L}] - k_{15}[T] + \frac{d[G_{T}]}{dt} + \frac{d[G_{F}]}{dt}$\\
+ 
+ $\frac{d[G_{F}]}{dt} = k_{-16}[g_{F}] - k_{16}[T][G_{F}]$\\
+ 
+ $\frac{d[g_{F}]}{dt} = -\frac{d[G_{F}]}{dt}$\\
+ 
+ $\frac{d[r_{F}]}{dt} = k_{17}[G_{F}] - k_{18}[r_{F}]$\\
+ 
+ $\frac{d[F]}{dt} = k_{19}[r_{L}] - k_{20}[T]$\\
+ 
+\end{document}
