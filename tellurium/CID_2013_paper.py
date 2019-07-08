@@ -11,10 +11,10 @@ import roadrunner
 
 
 r = te.loada("""
-J0: A + B -> AB ; K_AB * A * B - 1/K_AB * AB
-J1: B + C -> BC ; K_BC * B * C - 1/K_BC * BC
-J4: AB + C -> ABC ; K_AB_C * AB * C - 1/K_AB_C * ABC
-J5: BC + A -> ABC ; K_BC_A * BC * A - 1/K_BC_A * ABC
+J0: A + B -> AB ; K_A_B * A * B - K_AB * AB
+J1: B + C -> BC ; K_B_C * B * C - K_BC * BC
+J4: AB + C -> ABC ; K_AB_C * AB * C - K_ABC * ABC
+J5: BC + A -> ABC ; K_BC_A * BC * A - K_BCA * ABC
 
 # *******************************
 # Parameters
