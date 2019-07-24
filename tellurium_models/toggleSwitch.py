@@ -97,5 +97,4 @@ plt.plot(result[:,0],result[:,7])
 plt.legend(["reporter", "inducer (On)", "inducer (Off)"])
 plt.xlabel("Time (Hours)")
 plt.ylabel("Copies")
-r.draw()
 
