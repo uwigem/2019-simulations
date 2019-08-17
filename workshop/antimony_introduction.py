@@ -47,8 +47,6 @@ r = te.loada("""
 # The second argument is the final time
 # The third argument is the number of steps
 r.simulate(0, 12, 1000)
-r.A = 4
-r.simulate(12, 24, 1000)
 
 # r.plot() is used to graph the system. 
 r.plot()

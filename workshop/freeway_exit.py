@@ -9,12 +9,12 @@ import tellurium as te
 import roadrunner
 
 r = te.loada("""
-    J0: -> S1 ; v1 
-    J1: S1 -> S2 ; v2 * S1
-    J2: S3 -> S1 ; v4 * S3
-    J3: S3 -> S2 ; v5 * S3
-    J4: S2 -> ; v3 * S2
-    J5: -> S3 ; v6 
+    J0: 
+    J1:
+    J2:
+    J3:
+    J4:
+    J5:
     
     # Parameters
     v1 = 1
