@@ -9,7 +9,7 @@ import tellurium as te
 import roadrunner
 import math
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 ### Experimental Data ###
 # Eventually I want to have this propagated by json or command line arguments or something
@@ -49,7 +49,22 @@ alpha_crit = min(k_ab, k_bc) / max(anchor_con, dimbinder_con)
 # parameters. That means 
 ternary_partition_fraction_coop = dimer_max_coop / limiting_binder
 
+mol_total = [1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e2]
+equilibrium_dimer = []
+for i in mol_total:
+    equilibrium_dimer.append(((dimbinder_con+i+k_bc-math.sqrt(math.pow(dimbinder_con+i+k_bc,2)-4*dimbinder_con*i))/2)*((anchor_con+i+k_ab-math.sqrt(math.pow(anchor_con+i+k_ab,2)-4*anchor_con*i))/2)/i)
 
+print(str(mol_total))
+print(str(equilibrium_dimer))
+
+titration_curve = plt.figure()
+for i in range(len(mol_total)):
+    mol_total[i] = math.log10(mol_total[i])
+plt.plot(mol_total, equilibrium_dimer, label="Concentration of Dimer")
+plt.suptitle("Total Molecule in Sample vs. Concentration of Dimer")
+plt.xlabel('Log(Total Molecule (M))')
+plt.ylabel('Concentration of Dimer (M)')
+titration_curve.show()
 
 if ((anchor_con + k_ab) >= 10 * (dimbinder_con + k_bc)) or (10 * (anchor_con+k_ab) <= (dimbinder_con + k_bc)):
     resolvability = 1

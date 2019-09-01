@@ -52,4 +52,7 @@ def complex(mol_total, anchor_total, dimerization_total, Kab, Kbc):
     result = phiab * phibc / mol_total
     return result
 
+
+
+# 
 print(complex(3, 1, 1, 1, 1))
