@@ -48,7 +48,7 @@ alpha_crit = min(k_ab, k_bc) / max(anchor_con, dimbinder_con)
 # parameters. That means 
 ternary_partition_fraction_coop = dimer_max_coop / limiting_binder
 
-def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha):
+def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha, graphType):
     mol_total = [1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e2]
     equilibrium_dimer = []
     for i in mol_total:
@@ -56,9 +56,25 @@ def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha):
 
     #print(str(equilibrium_dimer))
     
+    range1 = mol_total
+    range2 = mol_total
+    range3 = mol_total
+    range4 = mol_total
+    range5 = mol_total
     titration_curve = plt.figure()
     for i in range(len(mol_total)):
         mol_total[i] = math.log10(mol_total[i])
+    if graphType == "anchor_con":
+        plt.plot(range1, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
+    elif graphType == "dimbinder_con":
+        plt.plot(range2, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
+    elif graphType == "k_ab":
+        plt.plot(range3, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
+    elif graphType == "k_bc":
+        plt.plot(range4, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
+    else:
+        plt.plot(range5, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
+        
     plt.plot(mol_total, equilibrium_dimer, label="Concentration of Dimer")
     #plt.suptitle("Total Molecule in Sample vs. Concentration of Dimer")
     plt.xlabel('Log(Total Molecule (M))')
@@ -110,15 +126,13 @@ def plot_param_uncertainty(startVal, name, num_sims):
             plotCurve(anchor_con, dimbinder_con, val, k_bc, alpha)
         elif name == "k_bc":
             plotCurve(anchor_con, dimbinder_con, k_ab, val, alpha)
-        elif name == "alpha":
+        else:
             plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, val)
         plt.title(name)
     plt.legend(["equilibrium_dimer"])
     plt.xlabel("log[molecule]")
     plt.ylabel("[dimer]")
 
-#startVals = r.getGlobalParameterValues();
-#names = list(enumerate([x for x in r.getGlobalParameterIds() if ("K" in x or "k" in x)]));
 startVals = [anchor_con, dimbinder_con, k_ab, k_bc, alpha]
 names = ["anchor_con", "dimbinder_con", "k_ab", "k_bc", "alpha"]
 n = len(names) + 1
