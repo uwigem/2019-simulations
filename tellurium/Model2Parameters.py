@@ -48,38 +48,21 @@ alpha_crit = min(k_ab, k_bc) / max(anchor_con, dimbinder_con)
 # parameters. That means 
 ternary_partition_fraction_coop = dimer_max_coop / limiting_binder
 
-def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha, graphType):
-    mol_total = [1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e2]
+def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha):
+    mol_total = np.logspace(-10, 2, num = 100)
     equilibrium_dimer = []
     for i in mol_total:
         equilibrium_dimer.append(((dimbinder_con+i+k_bc-math.sqrt(math.pow(dimbinder_con+i+k_bc,2)-4*dimbinder_con*i))/2)*((anchor_con+i+k_ab-math.sqrt(math.pow(anchor_con+i+k_ab,2)-4*anchor_con*i))/2)/i)
 
-    #print(str(equilibrium_dimer))
-    
-    range1 = mol_total
-    range2 = mol_total
-    range3 = mol_total
-    range4 = mol_total
-    range5 = mol_total
-    titration_curve = plt.figure()
+    # print(str(equilibrium_dimer))
     for i in range(len(mol_total)):
         mol_total[i] = math.log10(mol_total[i])
-    if graphType == "anchor_con":
-        plt.plot(range1, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
-    elif graphType == "dimbinder_con":
-        plt.plot(range2, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
-    elif graphType == "k_ab":
-        plt.plot(range3, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
-    elif graphType == "k_bc":
-        plt.plot(range4, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
-    else:
-        plt.plot(range5, mol_total, equilibrium_dimer, label = "Concentration of Dimer")
         
     plt.plot(mol_total, equilibrium_dimer, label="Concentration of Dimer")
     #plt.suptitle("Total Molecule in Sample vs. Concentration of Dimer")
     plt.xlabel('Log(Total Molecule (M))')
     plt.ylabel('Concentration of Dimer (M)')
-    titration_curve.show()
+    #titration_curve.show()
 
 plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha)
 
@@ -129,7 +112,6 @@ def plot_param_uncertainty(startVal, name, num_sims):
         else:
             plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, val)
         plt.title(name)
-    plt.legend(["equilibrium_dimer"])
     plt.xlabel("log[molecule]")
     plt.ylabel("[dimer]")
 
