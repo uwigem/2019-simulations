@@ -10,15 +10,72 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+# The solution that the model uses goes backwards, from the dimer concentrations to the total molecule required to reach those concentrations. 
+def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha):
+    equilibrium_dimer = []
+    for i in range(1,300):
+        equilibrium_dimer.append(dimer_max_coop / 300 * i)
+    for i in reversed(range(1,300)):
+        equilibrium_dimer.append(dimer_max_coop / 300 * i)
+    mol_total = []
+    for i in range(0,300):
+        intermediate = math.pow((alpha*(equilibrium_dimer[i]-anchor_con)*(equilibrium_dimer[i]-dimbinder_con)-equilibrium_dimer[i]*k_ab),2)-2*equilibrium_dimer[i]*(alpha*(equilibrium_dimer[i]-anchor_con)*(equilibrium_dimer[i]-dimbinder_con)+equilibrium_dimer[i]*k_ab)*k_bc+math.pow(equilibrium_dimer[i],2)*math.pow(k_bc,2)
+        radical = math.sqrt(abs(intermediate))
+        mol_total.append(0.5*(equilibrium_dimer[i] * alpha + anchor_con + dimbinder_con - k_ab - k_bc + (1/equilibrium_dimer[i]) * (alpha * anchor_con * dimbinder_con-radical)+(1/(alpha*(anchor_con-equilibrium_dimer[i])*(equilibrium_dimer[i]-dimbinder_con))*(math.pow(equilibrium_dimer[i],2)*math.pow(alpha,2)*(anchor_con+dimbinder_con)+(anchor_con+dimbinder_con)*(math.pow(alpha,2)*anchor_con*dimbinder_con+radical)-equilibrium_dimer[i]*(math.pow(alpha,2)*math.pow((anchor_con+dimbinder_con),2)-(anchor_con-dimbinder_con)*(k_ab-k_bc)+2*radical)))))
+    for i in range(300,598):
+        intermediate = math.pow((alpha*(equilibrium_dimer[i]-anchor_con)*(equilibrium_dimer[i]-dimbinder_con)-equilibrium_dimer[i]*k_ab),2)-2*equilibrium_dimer[i]*(alpha*(equilibrium_dimer[i]-anchor_con)*(equilibrium_dimer[i]-dimbinder_con)+equilibrium_dimer[i]*k_ab)*k_bc+math.pow(equilibrium_dimer[i],2)*math.pow(k_bc,2)
+        radical = math.sqrt(abs((intermediate)))
+        mol_total.append(0.5*(equilibrium_dimer[i]*alpha+anchor_con+dimbinder_con-k_ab-k_bc+(1/equilibrium_dimer[i])*(alpha*anchor_con*dimbinder_con+radical)+(1/(alpha*(-anchor_con+equilibrium_dimer[i])*(equilibrium_dimer[i]-dimbinder_con))*(-(math.pow(equilibrium_dimer[i],2)*math.pow(alpha,2)*(anchor_con+dimbinder_con))+(anchor_con+dimbinder_con)*(-(math.pow(alpha,2)*anchor_con*dimbinder_con)+radical)+equilibrium_dimer[i]*(math.pow(alpha,2)*math.pow((anchor_con+dimbinder_con),2)-(anchor_con-dimbinder_con)*(k_ab-k_bc)-2*radical)))))
+    for i in range(len(mol_total)):
+        if mol_total[i] > 0:
+            mol_total[i] = math.log10(mol_total[i])
+        
+    plt.plot(mol_total, equilibrium_dimer, label="Concentration of Dimer")
+    #plt.suptitle("Total Molecule in Sample vs. Concentration of Dimer")
+    plt.title("Equal anchor and dimerization binder")
+    plt.xlabel('Log(Total Molecule (M))')
+    plt.ylabel('Concentration of Dimer (M)')
+
+
+def plot_param_uncertainty(startVal, name, num_sims):
+    stdDev = 0.99999
+    print("Plotting Uncertainty")
+    # assumes initial parameter estimate as mean and iterates 60% above and below.
+    vals = np.linspace((1-stdDev)*startVal, (1+stdDev)*startVal, 100)
+    for val in vals:
+        # exec("r.%s = %f" % (name, val))
+        #result = r.simulate(0,0.5,1000, selections = ['time', 'GeneOn'])
+        #plt.plot(result[:,0],result[:,1])
+        if name == "anchor_con":
+            plotCurve(val, dimbinder_con, k_ab, k_bc, alpha)
+        elif name == "dimbinder_con":
+            plotCurve(anchor_con, val, k_ab, k_bc, alpha)
+        elif name == "k_ab":
+            plotCurve(anchor_con, dimbinder_con, val, k_bc, alpha)
+        elif name == "k_bc":
+            plotCurve(anchor_con, dimbinder_con, k_ab, val, alpha)
+        else:
+            plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, val)
+        plt.title(name)
+        
+    plt.xlabel("log[molecule]")
+    plt.ylabel("Fraction Ternary Complex")
+
+    
+    # Fraction Ternary complex = Ternary complex over limiting reagent ([a] or [c])
+    
+    
+
 ### Experimental Data ###
 # Eventually I want to have this propagated by json or command line arguments or something
 # in mols
 anchor_con = 1e-6
 dimbinder_con = 1e-6
-k_ab = 1e-5
-k_bc = 5.6e-6
+k_ab = 6e-6
+k_bc = 56.4e-9
 # the cooperativity term, found experimentally 
-alpha = 5e3
+alpha = 1e5
 
 limiting_binder = min(anchor_con, dimbinder_con)
 
@@ -48,23 +105,8 @@ alpha_crit = min(k_ab, k_bc) / max(anchor_con, dimbinder_con)
 # parameters. That means 
 ternary_partition_fraction_coop = dimer_max_coop / limiting_binder
 
-def plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha):
-    mol_total = np.logspace(-10, 2, num = 100)
-    equilibrium_dimer = []
-    for i in mol_total:
-        equilibrium_dimer.append(((dimbinder_con+i+k_bc-math.sqrt(math.pow(dimbinder_con+i+k_bc,2)-4*dimbinder_con*i))/2)*((anchor_con+i+k_ab-math.sqrt(math.pow(anchor_con+i+k_ab,2)-4*anchor_con*i))/2)/i)
-
-    # print(str(equilibrium_dimer))
-    for i in range(len(mol_total)):
-        mol_total[i] = math.log10(mol_total[i])
-        
-    plt.plot(mol_total, equilibrium_dimer, label="Concentration of Dimer")
-    #plt.suptitle("Total Molecule in Sample vs. Concentration of Dimer")
-    plt.xlabel('Log(Total Molecule (M))')
-    plt.ylabel('Concentration of Dimer (M)')
-    #titration_curve.show()
-
 plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, alpha)
+plt.show()
 
 if ((anchor_con + k_ab) >= 10 * (dimbinder_con + k_bc)) or (10 * (anchor_con+k_ab) <= (dimbinder_con + k_bc)):
     resolvability = 1
@@ -80,48 +122,27 @@ elif (dimbinder_con >= 10 * k_bc) or (k_bc >= 10 * dimbinder_con):
 else:
     print("Domination assumption not met")
     
+# Report the information derived from the model
 print("Maximum concentration of dimer: " + str(dimer_max_coop))
 print("Concentration of molecule required for maximum dimer: " + str(mol_max_dimer))
 print("TF50 : " + str(TF50))
 print("TI50 : " + str(TI50))
 print("Dynamic range : " + str(dynamic_range))
+print("Alpha critical: " + str(alpha_crit))
+
+alpha_crit = max(k_ab,k_bc) / (max(anchor_con, dimbinder_con) - 0.5 * min(anchor_con, dimbinder_con))
+alpha_greater_than_alpha_crit = (alpha >= alpha_crit)
 
 #mol_graphing_conc = 0.1
 #dimer_graphing_conc = (mol_graphing_conc - (dimbinder_con + mol_graphing_conc + k_bc - math.pow(math.sqrt((dimbinder_con+mol_graphing_conc+ k_bc),2)-4*dimbinder_con*mol_graphing_conc))/2) * ((anchor_con + mol_graphing_conc + k_ab - math.pow(math.sqrt((anchor_con + mol_graphing_conc + k_ab),2) - 4* anchor_con * mol_graphing_conc))/2)/mol_graphing_conc    
         
 # Parameter Sweeping
-#r = te.loada (titration_curve)
-
-def plot_param_uncertainty(startVal, name, num_sims):
-    stdDev = 0.6
-
-    # assumes initial parameter estimate as mean and iterates 60% above and below.
-    vals = np.linspace((1-stdDev)*startVal, (1+stdDev)*startVal, 100)
-    for val in vals:
-        # exec("r.%s = %f" % (name, val))
-        #result = r.simulate(0,0.5,1000, selections = ['time', 'GeneOn'])
-        #plt.plot(result[:,0],result[:,1])
-        if name == "anchor_con":
-            plotCurve(val, dimbinder_con, k_ab, k_bc, alpha)
-        elif name == "dimbinder_con":
-            plotCurve(anchor_con, val, k_ab, k_bc, alpha)
-        elif name == "k_ab":
-            plotCurve(anchor_con, dimbinder_con, val, k_bc, alpha)
-        elif name == "k_bc":
-            plotCurve(anchor_con, dimbinder_con, k_ab, val, alpha)
-        else:
-            plotCurve(anchor_con, dimbinder_con, k_ab, k_bc, val)
-        plt.title(name)
-    plt.xlabel("log[molecule]")
-    plt.ylabel("[dimer]")
-
-startVals = [anchor_con, dimbinder_con, k_ab, k_bc, alpha]
-names = ["anchor_con", "dimbinder_con", "k_ab", "k_bc", "alpha"]
+startVals = [anchor_con, k_ab, k_bc, alpha]
+names = ["anchor_con", "k_ab", "k_bc", "alpha"]
 n = len(names) + 1
 dim = math.ceil(math.sqrt(n))
 
-for i, next_param in enumerate(names):
-    plt.subplot(dim, dim, i + 1)
-    plot_param_uncertainty(startVals[i], names[i], 100)
-plt.tight_layout()
-plt.show()
+#for i, next_param in enumerate(names):
+#    plt.plot()
+#    plot_param_uncertainty(startVals[i], names[i], 100)
+#    plt.show()
